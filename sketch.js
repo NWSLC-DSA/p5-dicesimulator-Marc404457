@@ -6,6 +6,7 @@ const lowestRollPossible = 1;
 const highestRollPossible = 7; // Add 1 to correct the random() weirdness
 
 const dice = {
+  name: "Dice",
   center: 0,
   posX: 0,
   posY: 0,
@@ -15,6 +16,7 @@ const dice = {
 };
 
 const player = {
+  name: "Fundo",
   center: 0,
   posX: 0,
   posY: 0,
@@ -25,6 +27,7 @@ const player = {
 };
 
 const computer = {
+  name: "Computer",
   center: 0,
   posX: 0,
   posY: 0,
@@ -69,6 +72,8 @@ function buttonPressed() {
 }
 
 function drawDie(owner) {
+  stroke("black");
+  strokeWeight(1);
   if (owner.roll > 0) {
     square(
       owner.posX - dice.size,
@@ -83,42 +88,78 @@ function drawDie(owner) {
 
 function drawFace(rollValue, owner) {
   faces = [
-    [owner.posX, owner.posY], // Middle, index 0
-    [owner.posX - dice.size * 0.25, owner.posY + dice.size * 0.25], // Bottom Left, index 1
-    [owner.posX - dice.size * 0.25, owner.posY - dice.size * 0.25], // Top Left, index 2
-    [owner.posX + dice.size * 0.25, owner.posY + dice.size * 0.25], // Bottom Right, index 3
-    [owner.posX + dice.size * 0.25, owner.posY - dice.size * 0.25], // Top Right, index 4
-    [owner.posX - dice.size * 0.25, owner.posY], // Middle Left, index 5
-    [owner.posX + dice.size * 0.25, owner.posY], // Middle Right, index 6
+    [owner.posX - dice.size / 2, owner.posY], // Middle, index 0 RED
+    [owner.posX - dice.size * 0.75, owner.posY + dice.size * 0.25], // Bottom Left, index 1 GREEN
+    [owner.posX - dice.size * 0.75, owner.posY - dice.size * 0.25], // Top Left, index 2 YELLOW
+    [owner.posX - dice.size * 0.25, owner.posY + dice.size * 0.25], // Bottom Right, index 3 ORANGE
+    [owner.posX - dice.size * 0.25, owner.posY - dice.size * 0.25], // Top Right, index 4 PURPLE
+    [owner.posX - dice.size * 0.75, owner.posY], // Middle Left, index 5 BLUE
+    [owner.posX - dice.size * 0.25, owner.posY], // Middle Right, index 6 PINK
   ];
 
+  console.log(`${owner.name} posX is ${owner.posX}, posY is ${owner.posY}`);
+  let randomStroke = Math.floor(Math.random() * 16777215).toString(16);
+  console.log(`${owner.name}'s colour is ${randomStroke}`);
+
+  let rgb = parseInt(randomStroke, 16); // convert rrggbb to decimal
+  let redScale = (rgb >> 16) & 0xff; // extract red
+  let greenScale = (rgb >> 8) & 0xff; // extract green
+  let blueScale = (rgb >> 0) & 0xff; // extract blue
+
+  let luma = 0.2126 * redScale + 0.7152 * greenScale + 0.0722 * blueScale;
+
+  if (luma < 40 || luma > 200) {
+    stroke(`#${randomStroke}`);
+    console.log(`Changed colour to ${randomStroke}`);
+  }
   strokeWeight(_strokeWeight);
   if (rollValue == 1) {
+    //stroke(`red`);
     point(faces[0][0], faces[0][1]);
   } else if (rollValue == 2) {
+    //stroke(`green`);
     point(faces[1][0], faces[1][1]);
+    //stroke(`purple`);
     point(faces[4][0], faces[4][1]);
   } else if (rollValue == 3) {
+    //stroke(`red`);
     point(faces[0][0], faces[0][1]);
+    //stroke(`green`);
     point(faces[1][0], faces[1][1]);
+    //stroke(`purple`);
     point(faces[4][0], faces[4][1]);
   } else if (rollValue == 4) {
+    //stroke(`green`);
     point(faces[1][0], faces[1][1]);
+    //stroke(`yellow`);
     point(faces[2][0], faces[2][1]);
+    //stroke(`orange`);
     point(faces[3][0], faces[3][1]);
+    //stroke(`purple`);
     point(faces[4][0], faces[4][1]);
   } else if (rollValue == 5) {
+    //stroke(`red`);
     point(faces[0][0], faces[0][1]);
+    //stroke(`green`);
     point(faces[1][0], faces[1][1]);
+    //stroke(`yellow`);
     point(faces[2][0], faces[2][1]);
+    //stroke(`orange`);
     point(faces[3][0], faces[3][1]);
+    //stroke(`purple`);
     point(faces[4][0], faces[4][1]);
   } else if (rollValue == 6) {
+    //stroke(`green`);
     point(faces[1][0], faces[1][1]);
+    //stroke(`yellow`);
     point(faces[2][0], faces[2][1]);
+    //stroke(`orange`);
     point(faces[3][0], faces[3][1]);
+    //stroke(`purple`);
     point(faces[4][0], faces[4][1]);
+    //stroke(`blue`);
     point(faces[5][0], faces[5][1]);
+    //stroke(`pink`);
     point(faces[6][0], faces[6][1]);
   } else {
     console.log("ICH BIN KAPUT!!");
