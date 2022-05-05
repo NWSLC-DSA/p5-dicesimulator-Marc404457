@@ -8,29 +8,35 @@ const lowestRollPossible = 1;
 const highestRollPossible = 7; // Add 1 to correct the random() weirdness
 
 const dice = {
-  posX: 0, //(this.posX + width / 2) - (this.posX + this.dieSize / 2),
-  posY: 0, //(this.posY + height / 2) - (this.posY + this.dieSize / 2),
-  one: 1,
-  two: 2,
-  three: 3,
-  four: 4,
-  five: 5,
-  six: 6,
-  dieSize: 50,
-  cellSize: 0, //this.dieSize / 3
-  gridX: 3,
-  gridY: 3,
+  center: 0,
+  posX: 0,
+  posY: 0,
+  roll: 0,
+  size: 50,
   isPressed: false,
 };
 
-function setup() {
-  dice.posX = dice.posX + width / 2 - (dice.posX + dice.dieSize / 2);
-  dice.posY = dice.posY + height / 2 - (dice.posY + dice.dieSize / 2);
-  dice.cellSize = dice.dieSize / 3;
+const player = {
+  roll: 0,
+  won: 0,
+  lost: 0,
+  draw: 0,
+};
 
+const computer = {
+  roll: 0,
+  won: 0,
+  lost: 0,
+  draw: 0,
+};
+
+function setup() {
+  dice.posX = width / 2;
+  dice.posY = height / 2;
   button = createButton("Roll");
-  button.position(button.size - width / 2, height * 1.05);
-  button.mousePressed(rollDice);
+  button.size(100);
+  button.position(width / 2 - 50, height * 1.05);
+  button.mousePressed(buttonPressed);
 
   createCanvas(width, height);
   background(220);
@@ -39,46 +45,74 @@ function setup() {
 function draw() {
   if (dice.isPressed) {
     drawDie();
-    drawGrid();
+    drawFace(dice.roll);
+    console.log("Click...");
   }
   dice.isPressed = false;
 }
 
+function buttonPressed() {
+  dice.isPressed = true;
+  dice.roll = rollDice();
+
+  console.log(`You rolled a...\n${dice.roll}`);
+}
+
 function drawDie() {
   square(
-    posX + (posX + width / 2) - (posX + dice.dieSize / 2), // Set posX to half the value of canvas width, minus half the width of the die size.
-    posY + (posY + height / 2) - (posY + dice.dieSize / 2), // Does the same as above: for posY.
-    dice.dieSize,
+    dice.posX - dice.size / 2, // Set posX to half the value of canvas width, minus half the width of the die size.
+    dice.posY - dice.size / 2, // Does the same as above: for posY.
+    dice.size,
     radius
   );
 }
 
-function drawGrid() {
-  const matrix = new Array(5).fill(0).map(() => new Array(4).fill(0));
-  console.log(matrix[0][0]);
-  console.log(matrix[1][1]);
+function drawFace(rollValue) {
+  faces = [
+    [dice.posX, dice.posY], // Middle, index 0
+    [dice.posX - dice.size * 0.25, dice.posY + dice.size * 0.25], // Bottom Left, index 1
+    [dice.posX - dice.size * 0.25, dice.posY - dice.size * 0.25], // Top Left, index 2
+    [dice.posX + dice.size * 0.25, dice.posY + dice.size * 0.25], // Bottom Right, index 3
+    [dice.posX + dice.size * 0.25, dice.posY - dice.size * 0.25], // Top Right, index 4
+    [dice.posX - dice.size * 0.25, dice.posY], // Middle Left, index 5
+    [dice.posX + dice.size * 0.25, dice.posY], // Middle Right, index 6
+  ];
 
-  console.log(matrix);
-  
-  for (row = 0; row < dice.gridX; row++) {
-    for (column = 0; column < dice.gridY; column++) {
-      /*strokeWeight(7);
-      point(
-        dice.posX + dice.dieSize / 2 - dice.dieSize / 3,
-        dice.posY + dice.dieSize / 2 - dice.dieSize / 3,
-        dice.cellSize / 3
-      );
-
-      strokeWeight(1);*/
-      dice.posX += dice.cellSize;
-    }
-    dice.posX = dice.posX + width / 2 - (dice.posX + dice.dieSize / 2);
-    dice.posY += dice.cellSize;
+  strokeWeight(_strokeWeight);
+  if (rollValue == 1) {
+    point(faces[0][0], faces[0][1]);
+  } else if (rollValue == 2) {
+    point(faces[1][0], faces[1][1]);
+    point(faces[4][0], faces[4][1]);
+  } else if (rollValue == 3) {
+    point(faces[0][0], faces[0][1]);
+    point(faces[1][0], faces[1][1]);
+    point(faces[4][0], faces[4][1]);
+  } else if (rollValue == 4) {
+    point(faces[1][0], faces[1][1]);
+    point(faces[2][0], faces[2][1]);
+    point(faces[3][0], faces[3][1]);
+    point(faces[4][0], faces[4][1]);
+  } else if (rollValue == 5) {
+    point(faces[0][0], faces[0][1]);
+    point(faces[1][0], faces[1][1]);
+    point(faces[2][0], faces[2][1]);
+    point(faces[3][0], faces[3][1]);
+    point(faces[4][0], faces[4][1]);
+  } else if (rollValue == 6) {
+    point(faces[1][0], faces[1][1]);
+    point(faces[2][0], faces[2][1]);
+    point(faces[3][0], faces[3][1]);
+    point(faces[4][0], faces[4][1]);
+    point(faces[5][0], faces[5][1]);
+    point(faces[6][0], faces[6][1]);
+  } else {
+    console.log("ICH BIN KAPUT!!");
   }
+  strokeWeight(1);
 }
 
 function rollDice() {
-  dice.isPressed = true;
   return Math.floor(
     Math.random() * (highestRollPossible - lowestRollPossible) +
       lowestRollPossible
