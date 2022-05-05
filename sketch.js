@@ -1,5 +1,3 @@
-const posX = 0;
-const posY = 0;
 const width = 200;
 const height = 200;
 const radius = 7;
@@ -17,6 +15,9 @@ const dice = {
 };
 
 const player = {
+  center: 0,
+  posX: 0,
+  posY: 0,
   roll: 0,
   won: 0,
   lost: 0,
@@ -24,6 +25,9 @@ const player = {
 };
 
 const computer = {
+  center: 0,
+  posX: 0,
+  posY: 0,
   roll: 0,
   won: 0,
   lost: 0,
@@ -31,8 +35,10 @@ const computer = {
 };
 
 function setup() {
-  dice.posX = width / 2;
-  dice.posY = height / 2;
+  player.posX = width / 2 - dice.size * 0.25;
+  player.posY = height / 2;
+  computer.posX = width / 2 + dice.size * 1.25;
+  computer.posY = height / 2;
   button = createButton("Roll");
   button.size(100);
   button.position(width / 2 - 50, height * 1.05);
@@ -44,8 +50,10 @@ function setup() {
 
 function draw() {
   if (dice.isPressed) {
-    drawDie();
-    drawFace(dice.roll);
+    drawDie(player);
+    drawDie(computer);
+    drawFace(player.roll, player);
+    drawFace(computer.roll, computer);
     console.log("Click...");
   }
   dice.isPressed = false;
@@ -53,29 +61,35 @@ function draw() {
 
 function buttonPressed() {
   dice.isPressed = true;
-  dice.roll = rollDice();
+  player.roll = rollDice();
+  computer.roll = rollDice();
 
-  console.log(`You rolled a...\n${dice.roll}`);
+  console.log(`You rolled a...\n${player.roll}`);
+  console.log(`The computer rolled a...\n${computer.roll}`);
 }
 
-function drawDie() {
-  square(
-    dice.posX - dice.size / 2, // Set posX to half the value of canvas width, minus half the width of the die size.
-    dice.posY - dice.size / 2, // Does the same as above: for posY.
-    dice.size,
-    radius
-  );
+function drawDie(owner) {
+  if (owner.roll > 0) {
+    square(
+      owner.posX - dice.size,
+      owner.posY - dice.size / 2,
+      dice.size,
+      radius
+    );
+  } else {
+    console.log(`Could not draw ${owner} dice`);
+  }
 }
 
-function drawFace(rollValue) {
+function drawFace(rollValue, owner) {
   faces = [
-    [dice.posX, dice.posY], // Middle, index 0
-    [dice.posX - dice.size * 0.25, dice.posY + dice.size * 0.25], // Bottom Left, index 1
-    [dice.posX - dice.size * 0.25, dice.posY - dice.size * 0.25], // Top Left, index 2
-    [dice.posX + dice.size * 0.25, dice.posY + dice.size * 0.25], // Bottom Right, index 3
-    [dice.posX + dice.size * 0.25, dice.posY - dice.size * 0.25], // Top Right, index 4
-    [dice.posX - dice.size * 0.25, dice.posY], // Middle Left, index 5
-    [dice.posX + dice.size * 0.25, dice.posY], // Middle Right, index 6
+    [owner.posX, owner.posY], // Middle, index 0
+    [owner.posX - dice.size * 0.25, owner.posY + dice.size * 0.25], // Bottom Left, index 1
+    [owner.posX - dice.size * 0.25, owner.posY - dice.size * 0.25], // Top Left, index 2
+    [owner.posX + dice.size * 0.25, owner.posY + dice.size * 0.25], // Bottom Right, index 3
+    [owner.posX + dice.size * 0.25, owner.posY - dice.size * 0.25], // Top Right, index 4
+    [owner.posX - dice.size * 0.25, owner.posY], // Middle Left, index 5
+    [owner.posX + dice.size * 0.25, owner.posY], // Middle Right, index 6
   ];
 
   strokeWeight(_strokeWeight);
