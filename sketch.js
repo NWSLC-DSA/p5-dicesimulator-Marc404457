@@ -63,7 +63,7 @@ function draw() {
     }
   } else {
     drawScore();
-    for(i = 0; i < 3; i++) {
+    for (i = 0; i < 3; i++) {
       background(255);
       sleep(250);
       background(0, 255, 0);
@@ -90,7 +90,7 @@ function buttonPressed() {
 function drawDie(owner) {
   stroke("black");
   strokeWeight(1);
-  fill('white');
+  fill("#eeecec");
   if (owner.roll > 0) {
     square(
       owner.posX - dice.size,
@@ -124,10 +124,10 @@ function drawFace(rollValue, owner) {
   let greenScale = (rgb >> 8) & 0xff; // extract green
   let blueScale = (rgb >> 0) & 0xff; // extract blue
 
-  let luma = 0.2126 * redScale + 0.7152 * greenScale + 0.0722 * blueScale;
+  let luma = (redScale + greenScale + blueScale) / 3;
 
   //console.log(`Luma = ${redScale} ${greenScale} ${blueScale} = ${luma}`);
-  if (luma < 100 || luma > 200) {
+  if (luma < 40 || luma > 128) {
     stroke(`#${randomStroke}`);
     //console.log(`Changed ${owner.name} colour to ${randomStroke}`);
   }
