@@ -6,6 +6,7 @@ const lowestRollPossible = 1;
 const highestRollPossible = 7; // Add 1 to correct the random() weirdness
 
 const dice = {
+  // Dice object
   name: "Dice",
   center: 0,
   posX: 0,
@@ -17,6 +18,7 @@ const dice = {
 };
 
 const player = {
+  // Player object
   name: "Player",
   center: 0,
   posX: 0,
@@ -28,6 +30,7 @@ const player = {
 };
 
 const computer = {
+  // Computer object
   name: "Computer",
   center: 0,
   posX: 0,
@@ -66,7 +69,8 @@ function draw() {
     for (i = 0; i < 3; i++) {
       background(255);
       sleep(250);
-      background(0, 255, 0);
+      background(0, 255, 0); // i was trying to make the background flash to show a win yeah
+      sleep(250);
     }
   }
   dice.isPressed = false;
@@ -124,10 +128,10 @@ function drawFace(rollValue, owner) {
   let greenScale = (rgb >> 8) & 0xff; // extract green
   let blueScale = (rgb >> 0) & 0xff; // extract blue
 
-  let luma = (redScale + greenScale + blueScale) / 3;
+  let luma = redScale + greenScale + blueScale;
 
   //console.log(`Luma = ${redScale} ${greenScale} ${blueScale} = ${luma}`);
-  if (luma < 40 || luma > 128) {
+  if (luma < 100 || luma > 200) {
     stroke(`#${randomStroke}`);
     //console.log(`Changed ${owner.name} colour to ${randomStroke}`);
   }
