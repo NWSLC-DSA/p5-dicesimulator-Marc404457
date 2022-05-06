@@ -13,10 +13,11 @@ const dice = {
   roll: 0,
   size: 50,
   isPressed: false,
+  hasWon: false,
 };
 
 const player = {
-  name: "Fundo",
+  name: "",
   center: 0,
   posX: 0,
   posY: 0,
@@ -52,18 +53,23 @@ function setup() {
 }
 
 function draw() {
-  if (dice.isPressed) {
-    drawDie(player);
-    drawDie(computer);
-    drawFace(player.roll, player);
-    drawFace(computer.roll, computer);
-    //console.log("clicked");
+  if (!dice.hasWon) {
+    if (dice.isPressed) {
+      drawDie(player);
+      drawDie(computer);
+      drawFace(player.roll, player);
+      drawFace(computer.roll, computer);
+      //console.log("clicked");
+    }
+  } else {
+    drawScore();
   }
   dice.isPressed = false;
 }
 
 function buttonPressed() {
   dice.isPressed = true;
+  dice.hasWon = false;
   player.roll = rollDice();
   computer.roll = rollDice();
 
@@ -174,6 +180,11 @@ function drawFace(rollValue, owner) {
   strokeWeight(1);
 }
 
+function drawScore() {
+  text(`${player.name}`);
+  text(`${computer.name}`);
+}
+
 function whoWon(playerRoll, computerRoll) {
   if (playerRoll > computerRoll) {
     player.won += 1;
@@ -188,6 +199,7 @@ function whoWon(playerRoll, computerRoll) {
     computer.draw += 1;
     return "no one";
   }
+  dice.hasWon = true;
 }
 
 function rollDice() {
