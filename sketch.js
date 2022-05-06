@@ -17,7 +17,7 @@ const dice = {
 };
 
 const player = {
-  name: "",
+  name: "Player",
   center: 0,
   posX: 0,
   posY: 0,
@@ -39,7 +39,7 @@ const computer = {
 };
 
 function setup() {
-  player.name = player.posX = width / 2 - dice.size * 0.25;
+  player.posX = player.posX = width / 2 - dice.size * 0.25;
   player.posY = height / 2;
   computer.posX = width / 2 + dice.size * 1.25;
   computer.posY = height / 2;
@@ -63,6 +63,11 @@ function draw() {
     }
   } else {
     drawScore();
+    for(i = 0; i < 3; i++) {
+      background(255);
+      sleep(250);
+      background(0, 255, 0);
+    }
   }
   dice.isPressed = false;
 }
@@ -85,6 +90,7 @@ function buttonPressed() {
 function drawDie(owner) {
   stroke("black");
   strokeWeight(1);
+  fill('white');
   if (owner.roll > 0) {
     square(
       owner.posX - dice.size,
@@ -92,6 +98,7 @@ function drawDie(owner) {
       dice.size,
       radius
     );
+    noFill();
   } else {
     console.log(`Could not draw ${owner} dice`);
   }
@@ -181,8 +188,7 @@ function drawFace(rollValue, owner) {
 }
 
 function drawScore() {
-  text(`${player.name}`);
-  text(`${computer.name}`);
+  background(0);
 }
 
 function whoWon(playerRoll, computerRoll) {
